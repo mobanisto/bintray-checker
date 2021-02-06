@@ -1,0 +1,2 @@
+include 'web'
+project(':web').name = 'mavenfoo-server'
