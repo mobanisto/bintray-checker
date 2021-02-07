@@ -56,7 +56,7 @@ eclipse {
     wtp {
         component {
             contextPath = '/'
-            deployName = 'web-template-basic'
+            deployName = 'bintray-checker'
             resource deployPath: '/', sourcePath: 'src/main/webapp'
             resource deployPath: '/client', sourcePath: 'src/assets/vendor'
             resource deployPath: '/', sourcePath: 'build/static'

@@ -2,4 +2,4 @@
 
 set -e
 
-ssh root@web1.topobyte.de touch /opt/tomcat/tomcat-secure/rootapps/changeme/ROOT.war
+ssh root@web1.topobyte.de touch /opt/tomcat/tomcat-main/rootapps/bintray-checker/ROOT.war

@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
-	<display-name>changeme</display-name>
+	<display-name>bintray checker</display-name>
 
 	<context-param>
 		<param-name>logbackDisableServletContainerInitializer</param-name>
@@ -11,7 +11,7 @@
 	</context-param>
 
 	<listener>
-		<listener-class>de.mobanisto.changeme.InitListener</listener-class>
+		<listener-class>de.mobanisto.bintray.checker.InitListener</listener-class>
 	</listener>
 
 </web-app>
