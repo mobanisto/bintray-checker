@@ -15,25 +15,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with bintray-checker. If not, see <http://www.gnu.org/licenses/>.
 
-package de.mobanisto.changeme;
+package de.mobanisto.changeme.maven;
 
-import de.mobanisto.changeme.maven.Data;
-import lombok.Getter;
-import lombok.Setter;
+import de.topobyte.maven.core.VersionedArtifact;
 
-public class Website
+// Adapted from topobyte:maven-util
+public class PomNames
 {
 
-	public static final String TITLE = "Bintray Checker";
-
-	public static final Website INSTANCE = new Website();
-
-	@Getter
-	@Setter
-	private CacheBuster cacheBuster;
-
-	@Getter
-	@Setter
-	private Data data;
+	public static String pom(VersionedArtifact artifact)
+	{
+		return String.format("%s-%s.pom", artifact.getArtifactId(),
+				artifact.getVersion());
+	}
 
 }

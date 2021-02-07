@@ -18,21 +18,38 @@
 package de.mobanisto.changeme;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+
+import de.mobanisto.changeme.maven.Data;
+import de.mobanisto.changeme.maven.MavenUtil;
+import de.mobanisto.changeme.maven.Server;
 import de.mobanisto.changeme.resolving.MainPathResolver;
 import de.mobanisto.changeme.util.ServletUtil;
 import de.topobyte.jsoup.ContentGeneratable;
 import de.topobyte.jsoup.JsoupServletUtil;
+import de.topobyte.maven.core.VersionedArtifact;
 import de.topobyte.webgun.exceptions.PageNotFoundException;
 import de.topobyte.webgun.resolving.PathResolver;
 import de.topobyte.webgun.resolving.Redirecter;
@@ -50,29 +67,8 @@ public class IndexServlet extends HttpServlet
 		resolvers.add(new MainPathResolver());
 	}
 
-	private interface Responder<T>
-	{
-
-		public void respond(WebPath output, HttpServletResponse response,
-				T data) throws IOException;
-
-	}
-
-	private <T> void tryGenerate(HttpServletResponse response, WebPath path,
-			ContentGeneratable generator, Responder<T> responder, T data)
-			throws IOException
-	{
-		if (generator != null) {
-			try {
-				JsoupServletUtil.respond(response, generator);
-			} catch (PageNotFoundException e) {
-				responder.respond(path, response, data);
-			}
-		} else {
-			responder.respond(path, response, data);
-		}
-
-	}
+	private CloseableHttpClient client = HttpClientBuilder.create()
+			.disableRedirectHandling().build();
 
 	@Override
 	protected void doGet(HttpServletRequest request,
@@ -103,40 +99,94 @@ public class IndexServlet extends HttpServlet
 			}
 		}
 
-		tryGenerate(response, path, generator, ServletUtil::respond404,
-				(Void) null);
+		if (generator != null) {
+			try {
+				JsoupServletUtil.respond(response, generator);
+				return;
+			} catch (PageNotFoundException e) {
+				// go on
+			}
+		}
+
+		boolean served = tryServe(path, response);
+		if (served) {
+			return;
+		}
+
+		ServletUtil.respond404(path, response, null);
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException
+	private boolean tryServe(WebPath path, HttpServletResponse response)
 	{
-		String uri = URLDecoder.decode(request.getRequestURI(), "UTF-8");
-		WebPath path = WebPaths.get(uri);
+		Data data = Website.INSTANCE.getData();
+		List<Server> servers = data.getServers();
 
-		Map<String, String[]> parameters = request.getParameterMap();
-
-		List<Redirecter> redirecters = new ArrayList<>();
-
-		for (Redirecter redirecter : redirecters) {
-			String location = redirecter.redirect(path, parameters);
-			if (location != null) {
-				response.sendRedirect(location);
-				return;
-			}
+		VersionedArtifact artifact = null;
+		if (path.getNameCount() > 0 && path.getFileName().endsWith(".pom")) {
+			artifact = MavenUtil.artifactFromPomPath(path);
+			System.out.println("POM: " + artifact);
 		}
-
-		ContentGeneratable generator = null;
-
-		for (PathResolver<ContentGeneratable, Void> resolver : resolvers) {
-			generator = resolver.getGenerator(path, request, null);
-			if (generator != null) {
+		for (int i = 0; i < servers.size(); i++) {
+			Server server = servers.get(i);
+			boolean served = tryServe(server, path, response);
+			if (served) {
+				data.setServed(path, server, artifact);
 				break;
 			}
+			if (server == data.getBintray() && i < servers.size() - 1) {
+				// if served from bintray, check the other repos, too
+				List<Server> remaining = servers.subList(i + 1, servers.size());
+				for (Server other : remaining) {
+					boolean possible = checkForExistance(other, path);
+					if (possible) {
+						data.addAlternative(artifact, other);
+					}
+				}
+			}
 		}
+		return true;
+	}
 
-		tryGenerate(response, path, generator, ServletUtil::respond404,
-				(Void) null);
+	private boolean tryServe(Server server, WebPath path,
+			HttpServletResponse response)
+	{
+		try {
+			URI target = server.resolve(path);
+			System.out.println("TRY: " + target);
+			HttpGet get = new HttpGet(target);
+			try (CloseableHttpResponse r = client.execute(get)) {
+				StatusLine status = r.getStatusLine();
+				if (status.getStatusCode() == HttpStatus.SC_OK) {
+					InputStream input = r.getEntity().getContent();
+					ServletOutputStream output = response.getOutputStream();
+					IOUtils.copy(input, output);
+					output.close();
+					return true;
+				}
+				return false;
+			}
+		} catch (URISyntaxException | IOException e) {
+			return false;
+		}
+	}
+
+	private boolean checkForExistance(Server server, WebPath path)
+	{
+		try {
+			URI target = server.resolve(path);
+			System.out.println("TRY: " + target);
+			HttpGet get = new HttpGet(target);
+			try (CloseableHttpResponse r = client.execute(get)) {
+				StatusLine status = r.getStatusLine();
+				if (status.getStatusCode() == HttpStatus.SC_OK) {
+					EntityUtils.consume(r.getEntity());
+					return true;
+				}
+				return false;
+			}
+		} catch (URISyntaxException | IOException e) {
+			return false;
+		}
 	}
 
 }

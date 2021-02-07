@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
+import de.mobanisto.changeme.maven.Data;
 import de.topobyte.cachebusting.CacheBusting;
 import de.topobyte.melon.commons.io.Resources;
 
@@ -63,6 +64,9 @@ public class InitListener implements ServletContextListener
 		} catch (Throwable e) {
 			logger.error("Unable to load secure configuration", e);
 		}
+
+		logger.info("initializing data...");
+		Website.INSTANCE.setData(new Data());
 
 		long stop = System.currentTimeMillis();
 

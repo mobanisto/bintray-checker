@@ -57,10 +57,7 @@ public class MainMenu
 		menu.addToggleButton();
 
 		Div collapse = menu.addCollapsible();
-		List main = menu.addSection(collapse);
 		List right = menu.addSectionRight(collapse);
-
-		menu.addLink(main, "/beispiele", "Beispiele", false);
 
 		menu.addLink(right, "/about", "Über", false);
 

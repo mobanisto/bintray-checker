@@ -15,25 +15,23 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with bintray-checker. If not, see <http://www.gnu.org/licenses/>.
 
-package de.mobanisto.changeme;
+package de.mobanisto.changeme.maven;
 
-import de.mobanisto.changeme.maven.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-public class Website
+// Copied from topobyte:maven-util
+public class Maven
 {
 
-	public static final String TITLE = "Bintray Checker";
+	public static String URL_CENTRAL = "http://repo1.maven.org/maven2";
 
-	public static final Website INSTANCE = new Website();
+	public static String FILENAME_METADATA = "maven-metadata.xml";
 
-	@Getter
-	@Setter
-	private CacheBuster cacheBuster;
+	public static String SCOPE_COMPILE = "compile";
+	public static String SCOPE_TEST = "test";
+	public static String SCOPE_RUNTIME = "runtime";
+	public static String SCOPE_PROVIDED = "provided";
+	public static String SCOPE_SYSTEM = "system";
 
-	@Getter
-	@Setter
-	private Data data;
+	public static String CLASS_JAR = "";
+	public static String CLASS_SOURCES = "sources";
 
 }
