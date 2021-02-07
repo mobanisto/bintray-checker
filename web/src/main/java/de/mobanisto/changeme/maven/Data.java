@@ -43,6 +43,7 @@ public class Data
 		servers.add(new Server("https://dl.google.com/android/maven2/"));
 		servers.add(new Server("https://jitpack.io"));
 		servers.add(new Server("https://plugins.gradle.org/m2/"));
+		servers.add(new Server("https://repo1.maven.org/maven2/"));
 	}
 
 	private Map<WebPath, Server> pathToServer = new LinkedHashMap<>();

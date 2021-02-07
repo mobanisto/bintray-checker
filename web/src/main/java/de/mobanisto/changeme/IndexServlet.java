@@ -129,10 +129,10 @@ public class IndexServlet extends HttpServlet
 		for (int i = 0; i < servers.size(); i++) {
 			Server server = servers.get(i);
 			boolean served = tryServe(server, path, response);
-			if (served) {
-				data.setServed(path, server, artifact);
-				break;
+			if (!served) {
+				continue;
 			}
+			data.setServed(path, server, artifact);
 			if (server == data.getBintray() && i < servers.size() - 1) {
 				// if served from bintray, check the other repos, too
 				List<Server> remaining = servers.subList(i + 1, servers.size());
@@ -174,14 +174,16 @@ public class IndexServlet extends HttpServlet
 	{
 		try {
 			URI target = server.resolve(path);
-			System.out.println("TRY: " + target);
+			System.out.println("CHK: " + target);
 			HttpGet get = new HttpGet(target);
 			try (CloseableHttpResponse r = client.execute(get)) {
 				StatusLine status = r.getStatusLine();
 				if (status.getStatusCode() == HttpStatus.SC_OK) {
 					EntityUtils.consume(r.getEntity());
+					System.out.println("→ SUCCESS");
 					return true;
 				}
+				System.out.println("→ FAIL");
 				return false;
 			}
 		} catch (URISyntaxException | IOException e) {
