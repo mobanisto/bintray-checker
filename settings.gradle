@@ -1,2 +1,2 @@
 include 'web'
-project(':web').name = 'mavenfoo-server'
+project(':web').name = 'bintray-checker-server'

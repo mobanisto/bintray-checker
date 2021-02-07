@@ -53,9 +53,9 @@ public class AboutGenerator extends SimpleBaseGenerator
 		image.attr("style", "width: 100%; padding: 15%");
 
 		P p = colRight.ac(HTML.p());
-		p.at("About this site");
+		p.at("About " + Website.TITLE);
 		p = colRight.ac(HTML.p());
-		p.at("Ein Projekt von Mo und Sebastian von ");
+		p.at("A project by Mo und Seb from ");
 		p.ac(HTML.a("https://www.mobanisto.de", "Mobanisto"));
 		p.at(".");
 	}

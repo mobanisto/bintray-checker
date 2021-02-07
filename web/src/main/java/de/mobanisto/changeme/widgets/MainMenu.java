@@ -59,7 +59,7 @@ public class MainMenu
 		Div collapse = menu.addCollapsible();
 		List right = menu.addSectionRight(collapse);
 
-		menu.addLink(right, "/about", "Über", false);
+		menu.addLink(right, "/about", "About", false);
 
 		return menu;
 	}

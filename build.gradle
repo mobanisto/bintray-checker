@@ -33,7 +33,7 @@ subprojects {
     }
 }
 
-project(':mavenfoo-server') {
+project(':bintray-checker-server') {
     apply plugin: 'war'
     apply plugin: 'eclipse-wtp'
 }
