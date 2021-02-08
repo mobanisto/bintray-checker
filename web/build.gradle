@@ -33,7 +33,7 @@ dependencies {
     implementation 'de.topobyte:melon-enums:0.0.1'
     implementation 'de.topobyte:css-utils:0.1.0'
     implementation 'de.topobyte:shell-paths:0.0.1'
-    implementation 'topobyte:topobyte-maven-core:0.0.1'
+    implementation 'de.topobyte:connoisseur-core:0.0.1'
 
     implementation 'com.vladsch.flexmark:flexmark:0.28.18'
     implementation 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.28.18'
