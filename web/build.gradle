@@ -18,8 +18,7 @@ eclipse {
             deployName = 'bintray-checker'
             resource deployPath: '/', sourcePath: 'src/main/webapp'
             resource deployPath: '/client', sourcePath: 'src/assets/vendor'
-            resource deployPath: '/', sourcePath: 'build/static'
-            resource deployPath: '/', sourcePath: 'res-nohash'
+            resource deployPath: '/', sourcePath: 'core-build-static'
         }
     }
 }

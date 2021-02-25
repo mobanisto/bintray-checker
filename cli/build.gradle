@@ -33,7 +33,6 @@ jar {
     def core = rootProject.childProjects.'bintray-checker-server'
     def web = rootProject.childProjects.'bintray-checker-server-web'
     from ("$core.buildDir/static")
-    from ("$web.projectDir/src/assets/vendor")
 }
 
 task jarMain(type: Jar) {
@@ -42,10 +41,8 @@ task jarMain(type: Jar) {
     }
     archiveBaseName = 'bintray-checker'
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { project(':bintray-checker-server').sourceSets.main.resources }
     from { new File(project(':bintray-checker-server').buildDir, "/static") }
-    from ( new File(project(':bintray-checker-server-web').projectDir,'src/assets/vendor')) {
-        into 'client'
-    }
     with jar
 }
 

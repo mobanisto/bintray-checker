@@ -62,13 +62,13 @@ public class EmbeddedServer
 
 		// this will only be used for testing, the CLI uses the classpath
 		Path pathProject = SystemPaths.CWD.resolve("../").normalize();
-		Path pathWeb = pathProject.resolve("web");
-		Path pathResYarn = pathWeb.resolve("src/assets/vendor");
+		Path pathCore = pathProject.resolve("core");
+		Path pathResYarn = pathCore.resolve("src/assets/vendor");
 
 		// includeDirectories is true when running from the test
 		if (includeDirectories) {
 			ResourceCollection allResources = new ResourceCollection(
-					new PathResource(pathWeb.resolve("build/static")),
+					new PathResource(pathCore.resolve("build/static")),
 					new VirtualPathResource(pathResYarn, "/client"));
 
 			servletContextHandler.setBaseResource(allResources);

@@ -29,7 +29,6 @@ import de.topobyte.jsoup.ElementBuilder;
 import de.topobyte.jsoup.FaviconUtil;
 import de.topobyte.jsoup.bootstrap4.components.Menu;
 import de.topobyte.jsoup.components.Head;
-import de.topobyte.pagegen.bootstrap.Bootstrap4Generator;
 import de.topobyte.webgun.exceptions.PageNotFoundException;
 import de.topobyte.webpaths.WebPath;
 

@@ -68,4 +68,5 @@ cacheBusting {
     input = []
     input += 'res'
     input += 'build/favicons'
+    input += 'src/assets/vendor'
 }
