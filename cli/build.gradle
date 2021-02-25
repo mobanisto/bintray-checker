@@ -2,6 +2,7 @@ dependencies {
     implementation project(':bintray-checker-server')
 
     implementation 'de.topobyte:jetty-utils:0.0.1'
+    implementation 'de.topobyte:commons-cli-helper:0.1.0'
 }
 
 mainClassName = 'de.mobanisto.bintray.checker.RunEmbeddedServer'

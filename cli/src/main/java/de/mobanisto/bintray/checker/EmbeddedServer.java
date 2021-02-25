@@ -34,9 +34,15 @@ import de.mobanisto.bintray.checker.resources.ClassPathResources;
 import de.topobyte.jetty.utils.JettyUtils;
 import de.topobyte.jetty.utils.VirtualPathResource;
 import de.topobyte.system.utils.SystemPaths;
+import lombok.Getter;
+import lombok.Setter;
 
 public class EmbeddedServer
 {
+
+	@Getter
+	@Setter
+	private int port;
 
 	private Server server;
 
@@ -44,7 +50,7 @@ public class EmbeddedServer
 	{
 		server = new Server();
 		ServerConnector connector = new ServerConnector(server);
-		connector.setPort(8090);
+		connector.setPort(port);
 
 		ServletContextHandler servletContextHandler = new ServletContextHandler();
 		servletContextHandler.setContextPath("/");

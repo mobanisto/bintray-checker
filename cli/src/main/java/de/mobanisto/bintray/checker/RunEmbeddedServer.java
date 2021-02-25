@@ -17,12 +17,47 @@
 
 package de.mobanisto.bintray.checker;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 public class RunEmbeddedServer
 {
 
+	private static final String HELP_MESSAGE = RunEmbeddedServer.class
+			.getSimpleName() + " [options] ";
+
+	private static Options options = new Options();
+	static {
+		ServerOptions.add(options);
+	}
+
 	public static void main(String[] args) throws Exception
 	{
-		new EmbeddedServer().start(false);
+		CommandLine line = null;
+		try {
+			line = new DefaultParser().parse(options, args);
+		} catch (ParseException e) {
+			printHelpAndExit("unable to parse command line: " + e.getMessage());
+		}
+		if (line == null) {
+			return;
+		}
+
+		ServerOptions serverOptions = ServerOptions.parse(line);
+
+		EmbeddedServer server = new EmbeddedServer();
+		server.setPort(serverOptions.getPort());
+		server.start(false);
+	}
+
+	private static void printHelpAndExit(String message)
+	{
+		System.out.println(message);
+		new HelpFormatter().printHelp(HELP_MESSAGE, options);
+		System.exit(1);
 	}
 
 }
