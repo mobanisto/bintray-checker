@@ -1,0 +1,28 @@
+dependencies {
+    implementation project(':bintray-checker-server')
+
+    implementation 'de.topobyte:jetty-utils:0.0.1'
+}
+
+eclipse.classpath.file {
+    withXml {
+        def node = it.asNode()
+        node.appendNode('classpathentry', [kind: 'src', output: 'bin/main', path: 'logging/devel'])
+        node.appendNode('classpathentry', [kind: 'src', output: 'bin/main', path: 'config/devel'])
+    }
+}
+
+task copyJars(type: Copy) {
+    into "$buildDir/lib-run"
+    from jar
+}
+
+task copyDeps(type: Copy) {
+    into "$buildDir/lib-run"
+    from configurations.runtimeClasspath
+}
+
+task createRuntime(dependsOn: [copyJars, copyDeps]) {
+    dependsOn ':bintray-checker-server:clientInstall'
+    description 'Setup the execution environment for the main scripts'
+}

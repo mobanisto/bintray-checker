@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR=$(dirname $0)
-LIBS="$DIR/../cli/build/lib-run"
+LIBS="$DIR/../jetty/build/lib-run"
 
 if [ ! -d "$LIBS" ]; then
 	echo "Please run './gradlew createRuntime'"

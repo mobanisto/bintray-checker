@@ -31,8 +31,18 @@ subprojects {
 }
 
 project(':bintray-checker-server') {
+    apply plugin: 'java-library'
+    apply plugin: 'eclipse-wtp'
+}
+
+project(':bintray-checker-server-web') {
     apply plugin: 'war'
     apply plugin: 'eclipse-wtp'
+}
+
+project(':bintray-checker-server-cli') {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
 }
 
 subprojects {

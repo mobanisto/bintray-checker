@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://mvn.topobyte.de' }
+    }
+    dependencies {
+        classpath 'de.topobyte:gradle-generate-favicons-plugin:0.0.2'
+        classpath 'de.topobyte:gradle-cache-busting-plugin:0.0.5'
+    }
+}
+
+plugins {
+    id 'com.craigburke.client-dependencies' version '1.4.0'
+}
+
+apply plugin: 'de.topobyte.generate-favicons-gradle-plugin'
+apply plugin: 'de.topobyte.cache-busting-gradle-plugin'
+
+dependencies {
+    api 'de.topobyte:pagegen-core:1.1.0'
+    api 'de.topobyte:pagegen-bootstrap:1.2.0'
+    api 'de.topobyte:webgun-core:1.2.0'
+    api 'de.topobyte:webgun-resolving:1.2.0'
+    api 'de.topobyte:jsoup-elements:0.2.1'
+    api 'de.topobyte:jsoup-bootstrap4:1.1.2'
+    api 'de.topobyte:jsoup-servlet:0.2.0'
+    api 'de.topobyte:jsoup-jquery:0.1.0'
+    api 'de.topobyte:jsoup-utils:0.2.0'
+    api 'de.topobyte:jsoup-flexmark:0.1.0'
+    api 'de.topobyte:jsoup-feather:1.2.0'
+    api 'de.topobyte:servlet-utils:0.0.2'
+    api 'de.topobyte:melon-paths:0.0.3'
+    api 'de.topobyte:melon-enums:0.0.1'
+    api 'de.topobyte:css-utils:0.1.0'
+    api 'de.topobyte:shell-paths:0.0.1'
+    api 'de.topobyte:connoisseur-core:0.0.1'
+
+    api 'com.vladsch.flexmark:flexmark:0.28.18'
+    api 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.28.18'
+    api 'com.vladsch.flexmark:flexmark-ext-tables:0.28.18'
+    api 'com.vladsch.flexmark:flexmark-ext-wikilink:0.28.18'
+    api 'org.apache.httpcomponents:httpclient:4.5.5'
+
+    api 'org.slf4j:slf4j-api:1.7.20'
+
+    // we need this as compile due to shutdown code
+    api 'ch.qos.logback:logback-classic:1.2.3'
+}
+
+clientDependencies {
+    copyExcludes = ['**/*.map', '**/Gruntfile.js', 'gulpfile.js', 'source/**']
+    yarn {
+        'jquery'('3.5.1')
+        'bootstrap'('4.5.0')
+    }
+}
+
+tasks.eclipse.dependsOn clientInstall
+tasks.eclipse.dependsOn generateFavicons
+
+tasks.generateStaticFiles.dependsOn generateFavicons
+
+favicons {
+    input = 'res/images/icon.svg'
+}
+
+cacheBusting {
+    input = []
+    input += 'res'
+    input += 'build/favicons'
+}

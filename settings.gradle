@@ -1,2 +1,4 @@
-include 'web'
-project(':web').name = 'bintray-checker-server'
+include 'core', 'web', 'cli'
+project(':core').name = 'bintray-checker-server'
+project(':web').name = 'bintray-checker-server-web'
+project(':cli').name = 'bintray-checker-server-cli'
