@@ -4,6 +4,8 @@ dependencies {
     implementation 'de.topobyte:jetty-utils:0.0.1'
 }
 
+mainClassName = 'de.mobanisto.bintray.checker.RunEmbeddedServer'
+
 eclipse.classpath.file {
     withXml {
         def node = it.asNode()
@@ -25,4 +27,27 @@ task copyDeps(type: Copy) {
 task createRuntime(dependsOn: [copyJars, copyDeps]) {
     dependsOn ':bintray-checker-server:clientInstall'
     description 'Setup the execution environment for the main scripts'
+}
+
+jar {
+    def core = rootProject.childProjects.'bintray-checker-server'
+    def web = rootProject.childProjects.'bintray-checker-server-web'
+    from ("$core.buildDir/static")
+    from ("$web.projectDir/src/assets/vendor")
+}
+
+task jarMain(type: Jar) {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    archiveBaseName = 'bintray-checker'
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { new File(project(':bintray-checker-server').buildDir, "/static") }
+    from ( new File(project(':bintray-checker-server-web').projectDir,'src/assets/vendor')) {
+        into 'client'
+    }
+    with jar
+}
+
+task fatJars(dependsOn: ['jarMain']) {
 }

@@ -41,7 +41,7 @@ project(':bintray-checker-server-web') {
 }
 
 project(':bintray-checker-server-cli') {
-    apply plugin: 'java'
+    apply plugin: 'application'
     apply plugin: 'eclipse'
 }
 
