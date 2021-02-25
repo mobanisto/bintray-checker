@@ -13,7 +13,9 @@ Bintray / JCenter.
 
 ## How to use it
 
-Download the standalone jar file and run it like this:
+[Download the standalone jar
+file](https://github.com/mobanisto/bintray-checker/releases/download/0.0.1/bintray-checker-0.0.1.jar)
+and run it like this:
 
     java -jar bintray-checker-0.0.1.jar --port 9090
 
