@@ -58,6 +58,10 @@ public class AboutGenerator extends SimpleBaseGenerator
 		p.at("A project by Mo und Seb from ");
 		p.ac(HTML.a("https://www.mobanisto.de", "Mobanisto"));
 		p.at(".");
+		p = colRight.ac(HTML.p());
+		p.at("Github: ");
+		p.ac(HTML.a("https://github.com/mobanisto/bintray-checker",
+				"mobanisto/bintray-checker"));
 	}
 
 }
